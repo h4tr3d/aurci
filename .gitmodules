@@ -1,0 +1,6 @@
+[submodule "qtcreator-opt-git"]
+	path = qtcreator-opt-git
+	url = https://aur.archlinux.org/qtcreator-opt-git.git
+[submodule "qtcreator-cmakeprojectmanager2-plugin-opt-git"]
+	path = qtcreator-cmakeprojectmanager2-plugin-opt-git
+	url = https://aur.archlinux.org/qtcreator-cmakeprojectmanager2-plugin-opt-git.git
