@@ -7,29 +7,47 @@ before_install:
 
 install:
   - docker cp pkgrepository.sh qtcreator-opt:/home/pkguser
-  - docker exec qtcreator-opt bash pkgrepository.sh ${TRAVIS_REPO_SLUG} ${TRAVIS_TAG}
-
-before_script:
   - docker cp .gitmodules qtcreator-opt:/home/pkguser
   - docker cp pkgkeys     qtcreator-opt:/home/pkguser
-
-script:
-  - docker cp pkgbuild.sh         qtcreator-opt:/home/pkguser
-  - docker cp pkgbuild-prepare.sh qtcreator-opt:/home/pkguser
-  - docker cp pkgbuild-qtc-prepare.sh qtcreator-opt:/home/pkguser
-  - docker cp pkgbuild-qtc-build.sh qtcreator-opt:/home/pkguser
+  - docker cp pkgbuild.sh              qtcreator-opt:/home/pkguser
+  - docker cp pkgbuild-prepare.sh      qtcreator-opt:/home/pkguser
+  - docker cp pkgbuild-qtc-prepare.sh  qtcreator-opt:/home/pkguser
+  - docker cp pkgbuild-qtc-build.sh    qtcreator-opt:/home/pkguser
   - docker cp pkgbuild-qtc-finalize.sh qtcreator-opt:/home/pkguser
-  - docker exec qtcreator-opt bash pkgbuild-prepare.sh ${TRAVIS_REPO_SLUG} ${TRAVIS_BUILD_ID}
-  - docker exec qtcreator-opt bash pkgbuild-qtc-prepare.sh ${TRAVIS_REPO_SLUG} ${TRAVIS_BUILD_ID}
-  - docker exec qtcreator-opt bash pkgbuild-qtc-build.sh ${TRAVIS_REPO_SLUG} ${TRAVIS_BUILD_ID}
-  - docker exec qtcreator-opt bash pkgbuild-qtc-build.sh ${TRAVIS_REPO_SLUG} ${TRAVIS_BUILD_ID}
-  - docker exec qtcreator-opt bash pkgbuild-qtc-build.sh ${TRAVIS_REPO_SLUG} ${TRAVIS_BUILD_ID}
-  - docker exec qtcreator-opt bash pkgbuild-qtc-build.sh ${TRAVIS_REPO_SLUG} ${TRAVIS_BUILD_ID}
-  - docker exec qtcreator-opt bash pkgbuild-qtc-build.sh ${TRAVIS_REPO_SLUG} ${TRAVIS_BUILD_ID}
-  - docker exec qtcreator-opt bash pkgbuild-qtc-build.sh ${TRAVIS_REPO_SLUG} ${TRAVIS_BUILD_ID}
-  - docker exec qtcreator-opt bash pkgbuild-qtc-build.sh ${TRAVIS_REPO_SLUG} ${TRAVIS_BUILD_ID}
-  - docker exec qtcreator-opt bash pkgbuild-qtc-finalize.sh ${TRAVIS_REPO_SLUG} ${TRAVIS_BUILD_ID}
-  - docker exec qtcreator-opt bash pkgbuild.sh ${TRAVIS_REPO_SLUG} ${TRAVIS_BUILD_ID}
+  - docker exec qtcreator-opt bash pkgrepository.sh ${TRAVIS_REPO_SLUG} ${TRAVIS_TAG}
+
+jobs:
+  include:
+    - stage: common prepare
+      script:
+        - docker exec qtcreator-opt bash pkgbuild-prepare.sh ${TRAVIS_REPO_SLUG} ${TRAVIS_BUILD_ID}
+    - stage: QtC prepare
+      script:
+        - docker exec qtcreator-opt bash pkgbuild-qtc-prepare.sh ${TRAVIS_REPO_SLUG} ${TRAVIS_BUILD_ID}
+    - stage: QtC build stage 1
+      script:
+        - docker exec qtcreator-opt bash pkgbuild-qtc-build.sh ${TRAVIS_REPO_SLUG} ${TRAVIS_BUILD_ID}
+    - stage: QtC build stage 2
+      script:
+        - docker exec qtcreator-opt bash pkgbuild-qtc-build.sh ${TRAVIS_REPO_SLUG} ${TRAVIS_BUILD_ID}
+    - stage: QtC build stage 3
+      script:
+        - docker exec qtcreator-opt bash pkgbuild-qtc-build.sh ${TRAVIS_REPO_SLUG} ${TRAVIS_BUILD_ID}
+    - stage: QtC build stage 4
+      script:
+        - docker exec qtcreator-opt bash pkgbuild-qtc-build.sh ${TRAVIS_REPO_SLUG} ${TRAVIS_BUILD_ID}
+    - stage: QtC build stage 5
+      script:
+        - docker exec qtcreator-opt bash pkgbuild-qtc-build.sh ${TRAVIS_REPO_SLUG} ${TRAVIS_BUILD_ID}
+    - stage: QtC build stage 6
+      script:
+        - docker exec qtcreator-opt bash pkgbuild-qtc-build.sh ${TRAVIS_REPO_SLUG} ${TRAVIS_BUILD_ID}
+    - stage: QtC finalize
+      script:
+        - docker exec qtcreator-opt bash pkgbuild-qtc-finalize.sh ${TRAVIS_REPO_SLUG} ${TRAVIS_BUILD_ID}
+    - stage: pugins build
+      script:
+        - docker exec qtcreator-opt bash pkgbuild.sh ${TRAVIS_REPO_SLUG} ${TRAVIS_BUILD_ID}
 
 before_deploy:
   - docker cp qtcreator-opt:/home/pkguser/bin ${TRAVIS_TAG}
