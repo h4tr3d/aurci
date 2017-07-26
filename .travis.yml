@@ -2,23 +2,23 @@ services:
   - docker
 
 before_install:
-  - docker build -t localnet/aurci .
-  - docker run -d -t --name aurci localnet/aurci bash
+  - docker build -t h4tr3d/qtcreator-opt .
+  - docker run -d -t --name qtcreator-opt h4tr3d/qtcreator-opt bash
 
 install:
-  - docker cp pkgrepository.sh aurci:/home/pkguser
-  - docker exec aurci bash pkgrepository.sh ${TRAVIS_REPO_SLUG} ${TRAVIS_TAG}
+  - docker cp pkgrepository.sh qtcreator-opt:/home/pkguser
+  - docker exec qtcreator-opt bash pkgrepository.sh ${TRAVIS_REPO_SLUG} ${TRAVIS_TAG}
 
 before_script:
-  - docker cp pkglist aurci:/home/pkguser
-  - docker cp pkgkeys aurci:/home/pkguser
+  - docker cp pkglist qtcreator-opt:/home/pkguser
+  - docker cp pkgkeys qtcreator-opt:/home/pkguser
 
 script:
-  - docker cp pkgbuild.sh aurci:/home/pkguser
-  - docker exec aurci bash pkgbuild.sh ${TRAVIS_REPO_SLUG} ${TRAVIS_BUILD_ID}
+  - docker cp pkgbuild.sh qtcreator-opt:/home/pkguser
+  - docker exec qtcreator-opt bash pkgbuild.sh ${TRAVIS_REPO_SLUG} ${TRAVIS_BUILD_ID}
 
 before_deploy:
-  - docker cp aurci:/home/pkguser/bin ${TRAVIS_TAG}
+  - docker cp qtcreator-opt:/home/pkguser/bin ${TRAVIS_TAG}
 
 deploy:
   provider: releases

@@ -23,8 +23,8 @@ mapfile pkgkeys < "pkgkeys"
 # Remove packages from repository.
 cd "bin"
 while read pkg; do
-  repo-remove "aurci.db.tar.gz" ${pkg}
-done < <(comm -23 <(pacman -Sl "aurci" | cut -d" " -f2 | sort) <(aurchain ${pkglist[@]} | sort))
+  repo-remove "qtcreator-opt.db.tar.gz" ${pkg}
+done < <(comm -23 <(pacman -Sl "qtcreator-opt" | cut -d" " -f2 | sort) <(aurchain ${pkglist[@]} | sort))
 cd ".."
 
 # Get package gpg keys.
@@ -33,6 +33,6 @@ for key in ${pkgkeys[@]}; do
 done
 
 # Build outdated packages.
-aursync --repo "aurci" --root "bin" -nr ${pkglist[@]}
+aursync --repo "qtcreator-opt" --root "bin" -nr ${pkglist[@]}
 
 { set +ex; } 2>/dev/null
