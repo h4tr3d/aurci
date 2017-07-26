@@ -15,7 +15,21 @@ declare -a pkgkey=()
 mapfile pkglist < "pkglist"
 mapfile pkgkeys < "pkgkeys"
 
-# Build outdated packages.
-aursync --repo "qtcreator-opt" --root "bin" -nr ${pkglist[@]}
+CWD=`pwd`
+
+cd "src"
+cd qtcreator-opt-git
+
+list=`ls *.pkg.tar.xz`
+mv *.pkg.tar.xz "$CWD/bin/"
+
+cd "$CWD/bin"
+repo-remove "qtcreator-opt.db.tar.gz" qtcreator-opt-git qtcreator-opt-git-debug
+repo-add "qtcreator-opt.db.tar.gz" $list
+
+# Update pacman cache
+sudo pacman -Sy
+
+cd "$CWD"
 
 { set +ex; } 2>/dev/null
