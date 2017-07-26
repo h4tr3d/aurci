@@ -1,23 +1,24 @@
 services:
   - docker
 
-before_install:
-  - docker build -t h4tr3d/qtcreator-opt .
-  - docker run -d -t --name qtcreator-opt h4tr3d/qtcreator-opt bash
-
-install:
-  - docker cp pkgrepository.sh qtcreator-opt:/home/pkguser
-  - docker cp .gitmodules qtcreator-opt:/home/pkguser
-  - docker cp pkgkeys     qtcreator-opt:/home/pkguser
-  - docker cp pkgbuild.sh              qtcreator-opt:/home/pkguser
-  - docker cp pkgbuild-prepare.sh      qtcreator-opt:/home/pkguser
-  - docker cp pkgbuild-qtc-prepare.sh  qtcreator-opt:/home/pkguser
-  - docker cp pkgbuild-qtc-build.sh    qtcreator-opt:/home/pkguser
-  - docker cp pkgbuild-qtc-finalize.sh qtcreator-opt:/home/pkguser
-  - docker exec qtcreator-opt bash pkgrepository.sh ${TRAVIS_REPO_SLUG} ${TRAVIS_TAG}
-
 jobs:
   include:
+    - stage: install
+      before_install:
+        - docker build -t h4tr3d/qtcreator-opt .
+        - docker run -d -t --name qtcreator-opt h4tr3d/qtcreator-opt bash
+
+      install:
+         - docker cp pkgrepository.sh qtcreator-opt:/home/pkguser
+         - docker cp .gitmodules qtcreator-opt:/home/pkguser
+         - docker cp pkgkeys     qtcreator-opt:/home/pkguser
+         - docker cp pkgbuild.sh              qtcreator-opt:/home/pkguser
+         - docker cp pkgbuild-prepare.sh      qtcreator-opt:/home/pkguser
+         - docker cp pkgbuild-qtc-prepare.sh  qtcreator-opt:/home/pkguser
+         - docker cp pkgbuild-qtc-build.sh    qtcreator-opt:/home/pkguser
+         - docker cp pkgbuild-qtc-finalize.sh qtcreator-opt:/home/pkguser
+         - docker exec qtcreator-opt bash pkgrepository.sh ${TRAVIS_REPO_SLUG} ${TRAVIS_TAG}
+
     - stage: common prepare
       script:
         - docker exec qtcreator-opt bash pkgbuild-prepare.sh ${TRAVIS_REPO_SLUG} ${TRAVIS_BUILD_ID}
@@ -48,16 +49,15 @@ jobs:
     - stage: pugins build
       script:
         - docker exec qtcreator-opt bash pkgbuild.sh ${TRAVIS_REPO_SLUG} ${TRAVIS_BUILD_ID}
-
-before_deploy:
-  - docker cp qtcreator-opt:/home/pkguser/bin ${TRAVIS_TAG}
-
-deploy:
-  provider: releases
-  api_key: ${GITHUB_TOKEN}
-  file_glob: true
-  file: ${TRAVIS_TAG}/*{db,files,gz,xz}
-  overwrite: true
-  skip_cleanup: true
-  on:
-    branch: master
+    - stage: deploy
+      before_deploy:
+        - docker cp qtcreator-opt:/home/pkguser/bin ${TRAVIS_TAG}
+      deploy:
+        provider: releases
+        api_key: ${GITHUB_TOKEN}
+        file_glob: true
+        file: ${TRAVIS_TAG}/*{db,files,gz,xz}
+        overwrite: true
+        skip_cleanup: true
+        on:
+          branch: master
