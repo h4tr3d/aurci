@@ -16,6 +16,9 @@ for file in "pkglist" "pkgkeys"; do
   sed -i -e "/\s*#.*/s/\s*#.*//" -e "/^\s*$/d" ${file}
 done
 
+# Create pkglist based on .gitmodules
+cat .gitmodules | grep aur.archlinux.org | grep -v '^#' | sed 's|^.*/\(.*\)\.git$|\1|' > pkglist
+
 # Load files.
 mapfile pkglist < "pkglist"
 mapfile pkgkeys < "pkgkeys"

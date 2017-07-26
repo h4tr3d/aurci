@@ -10,8 +10,8 @@ install:
   - docker exec qtcreator-opt bash pkgrepository.sh ${TRAVIS_REPO_SLUG} ${TRAVIS_TAG}
 
 before_script:
-  - docker cp pkglist qtcreator-opt:/home/pkguser
-  - docker cp pkgkeys qtcreator-opt:/home/pkguser
+  - docker cp .gitmodules qtcreator-opt:/home/pkguser
+  - docker cp pkgkeys     qtcreator-opt:/home/pkguser
 
 script:
   - docker cp pkgbuild.sh qtcreator-opt:/home/pkguser
